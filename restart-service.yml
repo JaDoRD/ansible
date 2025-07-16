@@ -1,0 +1,9 @@
+---
+- name: restart
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: restart
+      ansible.builtin.systemd_service:
+        state: restarted
+        name: vic-vmagent.service

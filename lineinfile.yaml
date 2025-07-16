@@ -1,0 +1,12 @@
+---
+- name: sshd_config hardening
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Ensure PasswordAuthentication is prohibit‑password
+      ansible.builtin.lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^#?PasswordAuthentication\s+.*$'
+        line: 'PasswordAuthentication prohibit-password'
+      notify: Restart sshd

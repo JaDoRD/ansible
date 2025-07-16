@@ -1,0 +1,18 @@
+---
+- name: GoodBye NIkita
+  hosts: Balancer
+  become: yes
+  tasks:
+    - name: delete
+      lineinfile:
+        path: /root/.ssh/authorized_keys
+        regexp: '^ssh-rsa.*anykey.pub'
+#        replace: ''
+        state: absent
+    - name: Add multiple SSH keys
+      authorized_key:
+        user: root
+        state: present
+        key: "{{ item }}"
+      loop:
+        - "ssh-rsa anykey.pub"
