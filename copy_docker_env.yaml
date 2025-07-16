@@ -1,0 +1,25 @@
+---
+- name: Инспект контейнеры на всех хостах
+  hosts: all
+  gather_facts: no
+
+  tasks:
+    - name: Запустить скрипт
+      script: script_copy.sh
+      register: result
+
+    - name: Записать результат в файл на хосте
+      copy:
+        content: "{{ result.stdout }}"
+        dest: "/tmp/inspect_envs_{{ inventory_hostname }}.txt"
+
+    - name: Забрать файл на контроллер
+      fetch:
+        src: "/tmp/inspect_envs_{{ inventory_hostname }}.txt"
+        dest: "./results/"
+        flat: yes
+
+    - name: Удалить временный файл с хоста
+      file:
+        path: "/tmp/inspect_envs_{{ inventory_hostname }}.txt"
+        state: absent
